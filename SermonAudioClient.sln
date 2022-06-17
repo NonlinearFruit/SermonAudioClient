@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SermonAudioClient", "SermonAudioClient\SermonAudioClient.csproj", "{CC31AFE3-B6BA-4EAA-AF33-A72BEFC9B5E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SermonAudioClient.Tests", "SermonAudioClient.Tests\SermonAudioClient.Tests.csproj", "{773446EA-9967-4CEC-B9B9-8967A4C9CD57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{CC31AFE3-B6BA-4EAA-AF33-A72BEFC9B5E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC31AFE3-B6BA-4EAA-AF33-A72BEFC9B5E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC31AFE3-B6BA-4EAA-AF33-A72BEFC9B5E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{773446EA-9967-4CEC-B9B9-8967A4C9CD57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{773446EA-9967-4CEC-B9B9-8967A4C9CD57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{773446EA-9967-4CEC-B9B9-8967A4C9CD57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{773446EA-9967-4CEC-B9B9-8967A4C9CD57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
