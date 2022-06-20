@@ -1,3 +1,16 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Microsoft.Extensions.DependencyInjection;
+using SermonAudioClient;
+using SermonAudioClient.Utilities;
+using SermonAudioClient.Utilities.Interfaces;
 
-Console.WriteLine("Hello, World!");
+var apiKey = args[0];
+
+var services = new ServiceCollection();
+services.AddSingleton(apiKey);
+services.AddSingleton<IHttpClient, HttpClientWrapper>();
+services.AddSingleton<ISermonAudio, SermonAudio>();
+services.AddTransient<IFile, FileWrapper>();
+services.AddTransient<InputCollector>();
+
+var provider = services.BuildServiceProvider();
+provider.GetRequiredService<InputCollector>().Run();
