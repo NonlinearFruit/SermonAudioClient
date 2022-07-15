@@ -1,3 +1,5 @@
+using SermonAudioClient.Interfaces;
+
 namespace SermonAudioClient;
 
 public class InputCollector
@@ -14,19 +16,22 @@ public class InputCollector
       var sermon = new Sermon
       {
          Title = GetInput("Sermon Title"),
-         Speaker = GetInput("Sermon Speaker"),
+         Speaker = GetInput("Sermon Speaker (Philip B. Strong)", "Philip B. Strong"),
          BibleText = GetInput("Biblical Text (Comma Separated)"),
-         PreachDate = GetDate("Preached Date (now)"),
+         PreachDate = GetDate($"Preached Date ({DateTime.Now:yyyy-MM-dd})"),
          AudioFile = GetInput("Audio file (clipped 64kbps mp3)")
       };
       var url = _sermonAudio.CreateSermon(sermon);
       Console.WriteLine($"Checkout the sermon here: {url}");
    }
 
-   private string GetInput(string prompt)
+   private string GetInput(string prompt, string defaultValue = "")
    {
       Console.Write(prompt+": ");
-      return Console.ReadLine() ?? "";
+      var textReceived = Console.ReadLine();
+      return string.IsNullOrWhiteSpace(textReceived)
+         ? defaultValue
+         : textReceived;
    }
 
    private DateTime GetDate(string prompt)

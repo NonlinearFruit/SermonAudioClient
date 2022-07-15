@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
+using SermonAudioClient.Interfaces;
 using SermonAudioClient.Utilities.Interfaces;
 
 namespace SermonAudioClient;
@@ -32,7 +33,8 @@ public class SermonAudio : ISermonAudio
         queries.Add("speakerName", sermon.Speaker);
         queries.Add("bibleText", sermon.BibleText);
         queries.Add("preachDate", sermon.PreachDate.ToString("yyyy-MM-dd"));
-        var urlBuilder = new UriBuilder("https://api.sermonaudio.com/v1/broadcaster/create_sermon")
+        queries.Add("acceptAdditionalCharges", "false");
+        var urlBuilder = new UriBuilder("https://api.sermonaudio.com/v2/node/sermons")
         {
             Query = queries.ToString()
         };
@@ -46,12 +48,11 @@ public class SermonAudio : ISermonAudio
     private void UploadAudioFileToSermon(string sermonId, Sermon sermon)
     {
         var data = _file.GetFileData(sermon.AudioFile);
-        var base64Data = _file.ToBase64(data);
         var queries = HttpUtility.ParseQueryString(string.Empty);
         queries.Add("sermonID", sermonId);
-        queries.Add("filename", sermon.AudioFile);
-        queries.Add("fileData", base64Data);
-        var urlBuilder = new UriBuilder("https://api.sermonaudio.com/v1/broadcaster/upload_audio")
+        queries.Add("originalFilename", sermon.AudioFile);
+        queries.Add("uploadType", "original-audio");
+        var urlBuilder = new UriBuilder("https://api.sermonaudio.com/v2/media")
         {
             Query = queries.ToString()
         };

@@ -1,6 +1,7 @@
 using System.Collections.Specialized;
 using System.Net.Http.Headers;
 using System.Web;
+using SermonAudioClient.Interfaces;
 using SermonAudioClient.Tests.TestDoubles.Utilities;
 
 namespace SermonAudioClient.Tests;
@@ -40,7 +41,7 @@ public class SermonAudioTests
         var message = _http.FirstMessagePassedTo_Send;
         Assert.Equal(HttpMethod.Post, message.Method);
         AssertContainsHeader(message.Headers, "X-Api-Key", _apiKey);
-        AssertUrlsMatch("https://api.sermonaudio.com/v1/broadcaster/create_sermon", message.RequestUri);
+        AssertUrlsMatch("https://api.sermonaudio.com/v2/node/sermons", message.RequestUri);
         var queryParams = HttpUtility.ParseQueryString(message.RequestUri.Query);
         AssertContainsQueryParameter(queryParams, "fullTitle", title);
         AssertContainsQueryParameter(queryParams, "speakerName", speaker);
@@ -52,8 +53,6 @@ public class SermonAudioTests
     public void uploads_file()
     {
         var sermonId = "549824086";
-        var base64Data = "nonsensical data string of random characters";
-        _file.ReturnFor_ToBase64 = base64Data;
         _http.ReturnFor_Send = new HttpResponseMessage
         {
             Content = new StringContent($"{{\"sermonID\": \"{sermonId}\"}}")
@@ -72,11 +71,11 @@ public class SermonAudioTests
         var message = _http.LastMessagePassedTo_Send;
         Assert.Equal(HttpMethod.Post, message.Method);
         AssertContainsHeader(message.Headers, "X-Api-Key", _apiKey);
-        AssertUrlsMatch("https://api.sermonaudio.com/v1/broadcaster/upload_audio", message.RequestUri);
+        AssertUrlsMatch("https://api.sermonaudio.com/v2/media", message.RequestUri);
         var queryParams = HttpUtility.ParseQueryString(message.RequestUri.Query);
         AssertContainsQueryParameter(queryParams, "sermonID", sermonId);
-        AssertContainsQueryParameter(queryParams, "filename", "the_sermon_audio.mp3");
-        AssertContainsQueryParameter(queryParams, "fileData", base64Data);
+        AssertContainsQueryParameter(queryParams, "originalFilename", sermon.AudioFile);
+        AssertContainsQueryParameter(queryParams, "uploadType", "original-audio");
     }
 
     [Fact]
@@ -95,26 +94,6 @@ public class SermonAudioTests
 
         Assert.Equal(Verify.Once, _file.CountOfCallsTo_GetFileData);
         Assert.Equal(sermon.AudioFile, _file.LastFilePassedTo_GetFileData);
-    }
-
-    [Fact]
-    public void converts_file_data_to_base64()
-    {
-        var data = new byte[] {0, 1, 2, 3};
-        _file.ReturnFor_GetFileData = data;
-        var sermon = new Sermon
-        {
-            Title = "",
-            Speaker = "",
-            BibleText = "",
-            PreachDate = default,
-            AudioFile = default
-        };
-
-        _sermonAudio.CreateSermon(sermon);
-
-        Assert.Equal(Verify.Once, _file.CountOfCallsTo_ToBase64);
-        Assert.Equal(data, _file.LastDataPassedTo_ToBase64);
     }
 
     private static void AssertUrlsMatch(string expectedUrl, Uri actualUrl)

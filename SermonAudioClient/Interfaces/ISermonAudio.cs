@@ -1,4 +1,4 @@
-namespace SermonAudioClient;
+namespace SermonAudioClient.Interfaces;
 
 public interface ISermonAudio
 {
